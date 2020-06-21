@@ -1,3 +1,3 @@
 # InvoiceGenerator
 
-In collaboration with Kocsis Lorand.
+In collaboration with @kocsislorand98
