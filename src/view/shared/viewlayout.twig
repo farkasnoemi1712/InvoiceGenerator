@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- layout de baza -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>Starter Template - Materialize</title>
+
+    <!-- librarii CSS si JS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" media="screen,projection,print">
+    <link href="{{ url }}/asserts/css/materialize.css?v={{ staticMethods.getHashVersion() }}" type="text/css" rel="stylesheet" media="screen,projection,print" />
+    <link href="{{ url }}/asserts/css/style.css?v={{ staticMethods.getHashVersion() }}" type="text/css" rel="stylesheet" media="screen,projection,print" />
+
+    <!-- librarie pt js -->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!-- librarie pt materialize -->
+    <script src="{{ url }}/asserts/js/materialize.js?v={{ staticMethods.getHashVersion() }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+</head>
+
+<body>
+        {% block content %}{% endblock %}    
+</body>
+
+<script>
+    setTimeout(function(){
+        window.print();
+    } ,1000);
+</script>
+</html>

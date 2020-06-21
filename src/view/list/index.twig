@@ -1,0 +1,76 @@
+{% extends 'shared/layout.twig' %}
+{% block title %}StackImages{% endblock %}
+{% block content %}
+    <script>
+        if (localStorage.getItem('key') == undefined) {
+            window.location.href = "{{url}}/account/login";
+        } else {
+            let currentDate = new Date().getTime();
+            let storageTime = localStorage.getItem('auth_date');
+
+            console.log(currentDate - storageTime);
+            if(currentDate - storageTime > localStorage.getItem('expire_time') * 1000)
+            {
+                localStorage.clear();
+                window.location.href = "{{url}}/account/login";
+            }
+        }
+    </script>
+    <div class="container" id="listContainer" style="padding-top: 20px;">
+    </div>
+    <script>
+        $(document).ready(function (){
+            loadInvoices();
+        });
+
+        function loadInvoices(){
+            $.ajax({
+                url: "{{url}}/api/invoice/all",
+                type: "GET",
+                headers: {
+                    "Authorization": localStorage.getItem("key")
+                },
+                success: function (response){
+                    for(let i = 0; i < response.length; i++){
+                        let id = response[i].pk_id;
+                        
+                        let html = `<div class="row">
+                                    <nav class="teal darken-1">
+                                        <div class="nav-wrapper">
+                                            <div class="col s9">
+                                                <a href="{{url}}/edit/${id}" class="breadcrumb"># <span>Invoice ${id}</span></a>
+                                            </div>
+                                            <div class="col s3">
+                                                <a href="{{url}}/edit/${id}" class="btn waves-effect waves-light blue">Edit</a>
+                                                <a onclick="deleteInvoice(${id})" class="btn waves-effect waves-light red">Delete</a>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                </div>`;
+
+                        $("#listContainer").append(html);
+                    }
+                },
+                error: function(response){  
+                }
+            })
+        }
+
+        function deleteInvoice(id){
+            $.ajax({
+                url: `{{url}}/api/invoice/delete/${id}`,
+                type: "post",
+                headers: {
+                    "Authorization": localStorage.getItem("key")
+                },
+                success: function(response){
+                    $('#listContainer').html('');
+                    loadInvoices();
+                },
+                error: function(response){
+                    M.toast({html: response.responseJSON.error_message});
+                }
+            })
+        }
+    </script>
+{% endblock %}

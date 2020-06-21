@@ -1,0 +1,58 @@
+{% extends 'shared/layout.twig' %}
+{% block title %}TODO - Login{% endblock %}
+{% block content %}
+<script>
+    if(localStorage.getItem('key') != undefined){
+        window.location.href = "{{url}}";
+    }
+</script>
+        <div class="section no-pad-bot" id="index-banner">
+        <div class="container">
+            <div class="row">
+                <form class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="email" type="email" class="validate">
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="password" type="password" class="validate">
+                            <label for="password">Password</label>
+                        </div>
+                    </div>
+                    <button type="button" onclick="loginClick()" class="waves-effect waves-light btn">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function loginClick(){
+            let emailValue = $('#email').val();
+            let passwordValue = $('#password').val();
+
+            $.ajax(
+            {
+                url: "{{url}}/api/account/login",
+                type: "POST",
+                data: {
+                    email: emailValue,
+                    password: passwordValue
+                },
+                success: function(response){
+                    localStorage.setItem("key", response.key);
+                    localStorage.setItem("expire_time", response.expiry);
+                    localStorage.setItem("auth_date", new Date().getTime());
+                    setTimeout(function(){
+                        window.location.href = "{{url}}";
+                    } ,1000);
+                },
+                error: function(response){
+                    M.toast({html: response.responseJSON.error_message});
+                }
+            });
+        }
+    </script>
+{% endblock %}
